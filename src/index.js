@@ -30,7 +30,7 @@ class Calculator extends React.Component {
                 break;
             case 'CE':
                 this.setState({
-                    calcText: this.state.calcText.substring(0, this.state.calcText.length - 2)
+                    calcText: this.state.calcText.substring(0, this.state.calcText.length - 1)
                 });
                 break;
             case 'C':
