@@ -15,9 +15,16 @@ class Calculator extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            calcText: ''
+            calcText: '',
+            holder: '0'
         };
         //this.handleClick = this.handleClick.bind(this);
+    }
+
+
+
+    isOperator(val){
+        return  isNaN(val) && !(val == '.');
     }
 
     handleClick(event) {
@@ -25,22 +32,47 @@ class Calculator extends React.Component {
         switch(event){
             case '=':
                 this.setState({
-                    calcText: eval(this.state.calcText)
-                });
-                break;
-            case 'CE':
-                this.setState({
-                    calcText: this.state.calcText.substring(0, this.state.calcText.length - 1)
-                });
-                break;
-            case 'C':
-                this.setState({
+                    holder: eval(this.state.calcText),
                     calcText: ''
                 });
                 break;
-            default:
+            case 'CE':
+                if(this.state.calcText == '' && this.state.holder != '0') {
+                    this.setState({
+                        holder: '0'
+                    });
+                }
+                let max = this.state.calcText.length - 1;
+                while(!this.isOperator(this.state.calcText[max])){
+                    this.setState({
+                            calcText: this.state.calcText.substring(0, max)
+                        });
+                    max--;
+                }
+                break;
+            case 'C':
                 this.setState({
-                    calcText:  this.state.calcText + event
+                    calcText: '',
+                    holder: '0'
+                });
+                break;
+            case 'Back':
+                this.setState({
+                    calcText: this.state.calcText.substring(0, this.state.calcText.length-1)
+                });
+                break;
+            case '±':
+                alert('F OFF');
+                break;
+            default:
+                let text = "";
+                if(this.isOperator(event) && this.state.calcText == '')
+                    text = this.state.holder + event;
+                else
+                    text = this.state.calcText + event;
+
+                this.setState({
+                    calcText: text
                 });
                 break;
         }
@@ -57,17 +89,20 @@ class Calculator extends React.Component {
     render() {
         return (
             <div className="main">
+                <h1 className="title">
+                    Honey Badger Calculator
+                </h1>
                 <div className="board-row">
                     <input className="board-input"
                         disabled={true}
                         value={this.state.calcText}
-                        placeholder={'0'}
+                        placeholder={this.state.holder}
                         />
                 </div>
                 <div className="board-row">
                     {this.renderButton("CE", "CE")}
                     {this.renderButton("C", "C")}
-                    {this.renderButton("%", "%")}
+                    {this.renderButton("Back", "Back")}
                     {this.renderButton("÷", "/")}
                 </div>
                 <div className="board-row">
